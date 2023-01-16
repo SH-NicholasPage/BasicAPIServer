@@ -34,9 +34,9 @@ namespace SimpleAPI.Controllers
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
-        public IEnumerable<WeatherForecast> Get()
+        public IEnumerable<WeatherForecast> Get(int? numToGet = 5)
         {
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            return Enumerable.Range(1, numToGet!.Value).Select(index => new WeatherForecast
             {
                 Date = DateTime.Now.AddDays(index),
                 CurrentTemperatureC = GenerateRandomNumber(-20, 50),
