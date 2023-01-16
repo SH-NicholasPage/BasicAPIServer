@@ -33,17 +33,42 @@ namespace SimpleAPI.Controllers
             return Summaries.FirstOrDefault(s => tempC <= s.Item2).Item1 ?? "Scorching";
         }
 
-        [HttpGet(Name = "GetWeatherForecast")]
-        public IEnumerable<WeatherForecast> Get(int? numToGet = 5)
+        private (int[], String[]) GenerateHourlyForecast()
         {
-            return Enumerable.Range(1, numToGet!.Value).Select(index => new WeatherForecast
+            int[] hourlyTemps = new int[24];
+            String[] hourlySummaries = new String[24];
+            for (int i = 0; i < 24; i++)
             {
-                Date = DateTime.Now.AddDays(index),
-                CurrentTemperatureC = GenerateRandomNumber(-20, 50),
+                hourlyTemps[i] = GenerateRandomNumber(lastRandomNum - 5, lastRandomNum + 5);
+                hourlySummaries[i] = GenerateSummery(hourlyTemps[i]);
+            }
+
+            return (hourlyTemps, hourlySummaries);
+        }
+
+        [HttpGet(Name = "GetWeatherForecast")]
+        public WeatherForecast Get(int? numToGet = 5)
+        {
+            WeatherForecast wf = new WeatherForecast
+            {
+                CurrentDate = DateTime.Now,
+                CurrentTemperatureC = GenerateRandomNumber(-20, 55),
                 Summary = GenerateSummery(lastRandomNum),
-                HourlyTemperatureC = Enumerable.Range(1, 24).Select(i => Random.Shared.Next(-20, 50)).ToArray()
-            })
-            .ToArray();
+            };
+            
+            wf.HourlyForecast = new HourlyForecast[numToGet!.Value];
+            for (int i = 0; i < numToGet; i++)
+            {
+                (int[], String[]) hourly = GenerateHourlyForecast();
+                wf.HourlyForecast[i] = new HourlyForecast
+                {
+                    Date = DateTime.Now.AddDays(i),
+                    HourlyTemperatureC = hourly.Item1,
+                    Summary = hourly.Item2,
+                };
+            }
+
+            return wf;
         }
 
         [HttpPost(Name = "PostWeatherForecast")]
