@@ -49,8 +49,16 @@ namespace SimpleAPI.Controllers
         [HttpPost(Name = "PostWeatherForecast")]
         public Object Post([FromBody] WeatherForecast weatherForecast)
         {
-            _logger.LogInformation("Weather forecast posted: {weatherForecast}", weatherForecast);
-            return base.Ok("Post succeeded!");
+            try
+            {
+                _logger.LogInformation("Weather forecast posted: {weatherForecast}", weatherForecast);
+                return base.Ok("Post succeeded!");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error posting weather forecast: {weatherForecast}", weatherForecast);
+                return base.Problem("Post failed! " + ex.Message);
+            }
         }
     }
 }
