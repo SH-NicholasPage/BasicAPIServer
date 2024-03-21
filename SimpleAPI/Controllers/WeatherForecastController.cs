@@ -7,6 +7,8 @@ namespace SimpleAPI.Controllers
     [Route("api/v1/[controller]")]
     public class WeatherForecastController : ControllerBase
     {
+        private const int MAX_TEMP = 55;
+        private const int MIN_TEMP = -20;
         private int lastRandomNum = 0;
         
         private static readonly (String, Int32)[] Summaries = 
@@ -25,6 +27,9 @@ namespace SimpleAPI.Controllers
         private int GenerateRandomNumber(int min, int max)
         {
             lastRandomNum = Random.Shared.Next(min, max);
+            // Ensure lastRandomNum is within the range of MIN_TEMP and MAX_TEMP
+            lastRandomNum = Math.Max(lastRandomNum, MIN_TEMP);
+            lastRandomNum = Math.Min(lastRandomNum, MAX_TEMP);
             return lastRandomNum;
         }
 
@@ -52,7 +57,7 @@ namespace SimpleAPI.Controllers
             WeatherForecast wf = new WeatherForecast
             {
                 CurrentDate = DateTime.Now,
-                CurrentTemperatureC = GenerateRandomNumber(-20, 55),
+                CurrentTemperatureC = GenerateRandomNumber(MIN_TEMP, MAX_TEMP),
                 Summary = GenerateSummery(lastRandomNum),
                 HourlyForecast = new HourlyForecast[numToGet!.Value]
             };
