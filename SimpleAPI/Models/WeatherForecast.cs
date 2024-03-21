@@ -17,8 +17,8 @@ namespace SimpleAPI.Models
     public class HourlyForecast
     {
         public DateTime Date { get; set; }
-        public int[] HourlyTemperatureC { get; set; } = Array.Empty<int>();
+        public int[] HourlyTemperatureC { get; set; } = [];
         public int[] HourlyTemperatureF => HourlyTemperatureC.Select(t => 32 + (int)(t / 0.5556)).ToArray();
-        public String[]? Summary { get; set; } = Array.Empty<String>();
+        public String[]? Summary { get; set; } = [];
     }
 }

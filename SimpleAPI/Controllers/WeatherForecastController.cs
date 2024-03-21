@@ -54,9 +54,9 @@ namespace SimpleAPI.Controllers
                 CurrentDate = DateTime.Now,
                 CurrentTemperatureC = GenerateRandomNumber(-20, 55),
                 Summary = GenerateSummery(lastRandomNum),
+                HourlyForecast = new HourlyForecast[numToGet!.Value]
             };
-            
-            wf.HourlyForecast = new HourlyForecast[numToGet!.Value];
+
             for (int i = 0; i < numToGet; i++)
             {
                 (int[], String[]) hourly = GenerateHourlyForecast();
